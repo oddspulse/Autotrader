@@ -60,9 +60,9 @@ export class ApiServer {
   /**
    * Start the server
    */
-  start(port: number): void {
-    this.httpServer.listen(port, () => {
-      logger.info(`API server listening on port ${port}`);
+  start(port: number, host: string = "0.0.0.0"): void {
+    this.httpServer.listen(port, host, () => {
+      logger.info(`API server listening on ${host}:${port}`);
     });
   }
 

@@ -107,10 +107,11 @@ async function main() {
 
     // Start server
     const port = parseInt(process.env.PORT || "3001");
-    server.start(port);
+    const host = process.env.HOST || "0.0.0.0"; // Listen on all interfaces for iPad/remote access
+    server.start(port, host);
 
     logger.info("Auto-trader backend ready");
-    logger.info(`API server: http://localhost:${port}`);
+    logger.info(`API server: http://${host}:${port}`);
     logger.info("Connect your Phantom wallet in the frontend to start trading");
 
     // Graceful shutdown
