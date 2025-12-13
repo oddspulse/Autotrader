@@ -306,4 +306,50 @@ export class ApiServer {
       });
     });
   }
+
+  /**
+   * Auto-start bot (for deployment auto-start)
+   */
+  async autoStartBot(walletAddress: string): Promise<void> {
+    try {
+      logger.info(`Auto-starting bot with wallet: ${walletAddress}`);
+
+      // Create bot if it doesn't exist
+      if (!this.bot) {
+        this.bot = new TradingBot(this.config, this.database);
+
+        // Set WebSocket callback
+        this.bot.setWsCallback((message) => {
+          this.io.emit("update", message);
+        });
+
+        // Set logger WebSocket callback
+        logger.setWsCallback((message) => {
+          this.io.emit("update", message);
+        });
+      }
+
+      await this.bot.start(walletAddress);
+      logger.info("Bot auto-started successfully");
+    } catch (error) {
+      logger.error("Failed to auto-start bot", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Stop the server and bot
+   */
+  async stop(): Promise<void> {
+    try {
+      if (this.bot) {
+        await this.bot.stop();
+      }
+      this.httpServer.close();
+      this.io.close();
+      logger.info("API server stopped");
+    } catch (error) {
+      logger.error("Error stopping server", error);
+    }
+  }
 }

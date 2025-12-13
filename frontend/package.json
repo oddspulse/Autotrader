@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:shared && next build",
+    "build:shared": "cd ../shared && npm install && npm run build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "npm run build:shared && next build"
   },
   "dependencies": {
     "@autotrader/shared": "*",

@@ -3,6 +3,7 @@ import path from "path";
 import { BotConfig, Exchange, isAllowedSymbol, ALLOWED_SYMBOLS } from "@autotrader/shared";
 import { ApiServer } from "./server/ApiServer";
 import { TradingDatabase } from "./database/Database";
+import { TradingBot } from "./worker/TradingBot";
 import { logger } from "./utils/logger";
 
 // Load environment variables
@@ -112,17 +113,43 @@ async function main() {
 
     logger.info("Auto-trader backend ready");
     logger.info(`API server: http://${host}:${port}`);
-    logger.info("Connect your Phantom wallet in the frontend to start trading");
+
+    // Check if AUTO_START is enabled
+    const autoStart = process.env.AUTO_START === "true";
+    const autoStartWallet = process.env.AUTO_START_WALLET;
+
+    if (autoStart && autoStartWallet) {
+      logger.info("AUTO_START enabled - Bot will start automatically");
+      logger.info(`Auto-starting with wallet: ${autoStartWallet}`);
+
+      // Wait a bit for server to fully initialize
+      setTimeout(async () => {
+        try {
+          await server.autoStartBot(autoStartWallet);
+          logger.info("Bot auto-started successfully");
+        } catch (error) {
+          logger.error("Failed to auto-start bot", error);
+          logger.info("Bot can still be started manually via the UI");
+        }
+      }, 3000); // 3 second delay
+    } else {
+      logger.info("Connect your Phantom wallet in the frontend to start trading");
+      if (!autoStart) {
+        logger.info("Tip: Set AUTO_START=true and AUTO_START_WALLET=<address> to auto-start on deployment");
+      }
+    }
 
     // Graceful shutdown
     process.on("SIGINT", async () => {
       logger.info("Shutting down gracefully...");
+      await server.stop();
       database.close();
       process.exit(0);
     });
 
     process.on("SIGTERM", async () => {
       logger.info("Shutting down gracefully...");
+      await server.stop();
       database.close();
       process.exit(0);
     });
