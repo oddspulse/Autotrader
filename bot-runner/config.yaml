@@ -1,0 +1,62 @@
+exchange:
+  name: kraken
+  sandbox: false
+  rate_limit: true
+  timeout: 30000
+
+pairs:
+  - BTC/USD
+  - ETH/USD
+  - SOL/USD
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+  - BTC/USDC
+  - ETH/USDC
+  - SOL/USDC
+  - BTC/CAD
+  - ETH/CAD
+  - SOL/CAD
+
+timeframe: "15m"
+
+strategy:
+  type: ema_crossover_trend
+  ema_fast: 20
+  ema_slow: 50
+  ema_trend: 200
+  atr_period: 14
+  atr_max_pct: 0.08
+  stop_atr_mult: 1.5
+  trail_atr_mult: 2.5
+  cooldown_minutes: 30
+
+risk:
+  kelly_fraction: 1.0
+  max_positions: 3
+  daily_max_loss_pct: 0.02
+  max_drawdown_pct: 0.08
+  min_kelly_fraction: 0.01
+  max_kelly_fraction: 0.25
+  min_trades_for_kelly: 20
+  default_position_pct: 0.02
+
+execution:
+  order_type: market
+  slippage_pct: 0.001
+  min_volume_usd: 50000
+  max_retries: 3
+
+monitoring:
+  heartbeat_interval: 60
+  max_consecutive_failures: 5
+  alert_on_trade: true
+  daily_summary_hour: 0
+
+costs:
+  estimated_monthly_vps_usd: 10.0
+  estimated_monthly_other_usd: 0.0
+
+modes:
+  paper_trading: true
+  backtest: false

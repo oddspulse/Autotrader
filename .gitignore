@@ -1,52 +1,46 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-
-# Production
-build/
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
 dist/
+build/
+venv/
+.venv/
+*.egg
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Node
+node_modules/
 .next/
 out/
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Database
-*.db
-*.db-shm
-*.db-wal
-backend/data/
-
 # Logs
-logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-pnpm-debug.log*
+autotrader.log
 
-# OS
-.DS_Store
-*.swp
-*.swo
-*~
-Thumbs.db
+# Database fallback
+trades_fallback.json
 
 # IDE
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
+*.swp
+*.swo
+*~
 
-# Misc
-.turbo
-.vercel
+# OS
+.DS_Store
+Thumbs.db
+
+# Backtest output
+backtest_results.json
+
+# Credentials (never commit)
+*.pem
+*.key
+credentials.json
